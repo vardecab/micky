@@ -5,7 +5,7 @@
 ![Swift 5.9+](https://img.shields.io/badge/Swift-5.9%2B-F05138?logo=swift&logoColor=white)
 [![PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-6f42c1)](LICENSE)
 
-A macOS menu bar microphone meter with a floating, always-on-top waveform overlay. Audio is measured locally and never recorded or saved.
+A macOS menu bar microphone meter with a floating, always-on-top waveform overlay. Micky was made to help you keep your microphone level in a good range so you can sound clear and consistent on video calls. Audio is measured locally and never recorded or saved.
 
 ![Micky's floating microphone level overlay](screenshots/micky.gif)
 
@@ -67,7 +67,9 @@ Allow microphone access at the first prompt. To change it later, use **System Se
 
 ### 📦 Prebuilt version
 
-Download the versioned `Micky-*-macos.zip` asset from [GitHub Releases](https://github.com/vardecab/micky/releases), unzip it, and move `Micky.app` to Applications. Open it and allow microphone access when prompted. If macOS shows a security warning, Control-click the app, choose **Open**, then confirm. If no release is listed yet, build from source below.
+Download the versioned `Micky-*-macos.zip` asset from [GitHub Releases](https://github.com/vardecab/micky/releases), unzip it, and move `Micky.app` to Applications. Open it and allow microphone access when prompted.
+
+**About the macOS security warning:** The release is not notarized by Apple. Notarizing a Mac app for distribution outside the App Store requires enrollment in Apple's paid Developer Program, which this project does not have. As a result, Gatekeeper may say it cannot verify the app or check it for malicious software. This warning reflects the app's notarization status; it is not a malware scan result. Download Micky from the official releases page, and review the source if you want to inspect it. To open it, Control-click `Micky.app`, choose **Open**, then confirm. If no release is listed yet, build from source below.
 
 ### 🛠️ Build from source
 
