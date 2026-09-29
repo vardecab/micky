@@ -28,8 +28,6 @@ A macOS menu bar microphone meter with a floating, always-on-top waveform overla
 | Settings | Choose a microphone and adjust overlay appearance and position |
 | Quit Micky | Close the app |
 
-Settings does not open automatically when Micky launches.
-
 ### 📊 Level guide
 
 | Peak level | Guide | Overlay color |
