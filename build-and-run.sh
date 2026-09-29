@@ -2,6 +2,17 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
+PACKAGE_ONLY=false
+if [[ $# -gt 1 ]]; then
+    echo "Usage: $0 [--package-only]" >&2
+    exit 2
+fi
+case "${1:-}" in
+    "") ;;
+    --package-only) PACKAGE_ONLY=true ;;
+    *) echo "Usage: $0 [--package-only]" >&2; exit 2 ;;
+esac
+
 MICKY_BUILD_LOG="$ROOT/build.log"
 exec > >(tee "$MICKY_BUILD_LOG") 2>&1
 echo "Writing build output to $MICKY_BUILD_LOG"
@@ -72,6 +83,13 @@ cp "$ROOT/icons/mic-on.png" "$ROOT/icons/mic-off.png" \
 package_app_icon "$STAGED_APP/Contents/Resources"
 
 codesign --force --deep --sign - "$STAGED_APP"
+
+if [[ "$PACKAGE_ONLY" == true ]]; then
+    rm -rf "$APP"
+    /usr/bin/ditto "$STAGED_APP" "$APP"
+    echo "Built $APP without installing or launching it."
+    exit 0
+fi
 
 # Close the old copy only after the replacement has compiled and signed.
 osascript -e 'tell application id "com.vaultomix.Micky" to quit' >/dev/null 2>&1 || true

@@ -57,9 +57,7 @@ Allow microphone access at the first prompt. To change it later, use **System Se
 
 ## Use a prebuilt version
 
-Download the macOS app from [GitHub Releases](https://github.com/vardecab/micky/releases), unzip `Micky.app.zip`, and move `Micky.app` to Applications. Open it and allow microphone access when prompted. If macOS shows a security warning, Control-click the app, choose **Open**, then confirm.
-
-**No current prebuilt release is published yet.** Use the build scripts below until a release is available.
+Download the versioned `Micky-*-macos.zip` asset from [GitHub Releases](https://github.com/vardecab/micky/releases), unzip it, and move `Micky.app` to Applications. Open it and allow microphone access when prompted. If macOS shows a security warning, Control-click the app, choose **Open**, then confirm. If no release is listed yet, build from source below.
 
 ## Build from source
 
@@ -70,6 +68,18 @@ Requires macOS and Xcode Command Line Tools. From this folder, run:
 ```
 
 It builds Micky, installs or updates `/Applications/Micky.app`, then launches it in the background. It may request administrator approval to update Applications. Build output is shown in the terminal and saved to `build.log`.
+
+## Publish a release
+
+Requires GitHub CLI (`gh`) authenticated to this repository and a clean, up-to-date `main` branch. To publish the current version for the first time, run `./release.sh current`. For later releases, choose a SemVer bump:
+
+```sh
+./release.sh patch   # increment patch
+./release.sh minor   # increment minor, reset patch
+./release.sh major   # increment major, reset minor and patch
+```
+
+`current` publishes the version already in `Info.plist`. A SemVer bump updates version metadata and the README. The script builds a zip for the Mac's architecture, commits and pushes version changes when needed, then creates a GitHub release with generated notes.
 
 ## Version history
 
