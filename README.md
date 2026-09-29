@@ -30,15 +30,16 @@ Settings does not open automatically when Micky launches.
 
 ## Level guide
 
-| Peak level | Guide |
-| --- | --- |
-| Below −30 dBFS | Very quiet |
-| −30 to −18 dBFS | Low |
-| −18 to −6 dBFS | Useful call level |
-| −6 to −1 dBFS | Loud |
-| −1 dBFS or higher | Near clipping |
+| Peak level | Guide | Overlay color |
+| --- | --- | --- |
+| Below −30 dBFS | Very quiet | 🩵 Light blue |
+| −30 to −18 dBFS | Low | 🔹 Cyan |
+| −18 to −6 dBFS | Useful call level | 🟢 Green |
+| −6 to −1 dBFS | Loud | 🟠 Amber |
+| −1 dBFS or higher | Near clipping | 🔴 Coral red |
 
 dBFS measures digital headroom, not acoustic loudness. Call apps may adjust microphone gain, so use their own mic test too.
+When the microphone is muted, the entire waveform turns red.
 
 ## Settings
 
