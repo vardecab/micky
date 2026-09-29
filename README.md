@@ -1,23 +1,85 @@
 # Micky
 
-A small menu bar utility that shows the live microphone input level in a floating capsule at the bottom center of the screen. The panel stays above other windows and joins every Space. Drag it by its background to reposition it, or use the horizontal and vertical position sliders in Settings. Adjust its size there too. The app remembers dragged positions.
+A macOS menu bar microphone meter with a floating, always-on-top waveform overlay. Audio is measured locally and never recorded or saved.
 
-The meter follows the macOS default input device or a microphone selected in Settings. It displays short-term peak level in dBFS. The colored bars use a practical call setup guide: peaks below −30 dBFS are very quiet, −30 to −18 dBFS are low, −18 to −6 dBFS are a useful working range, −6 to −1 dBFS are hot, and −1 dBFS or higher is near digital clipping. dBFS measures headroom to digital full scale, not acoustic loudness at the microphone. Video call apps may apply automatic gain control, so use the colors as a local setup aid and confirm with the call app’s own microphone test.
+## Features
 
-The menu bar microphone icon opens controls for pausing the meter and opening Settings. Settings lets you choose any available Core Audio input or follow System Default, and includes an opacity slider, a vertical position slider, and a color legend for the speech peak thresholds. At 100% the capsule background is opaque black; lower settings blend the material with more of the desktop behind it. On macOS 26 and later the capsule uses Liquid Glass; earlier supported macOS releases use a translucent material fallback. The microphone glyph has a black tile for contrast.
+- Live short-term peak level in dBFS; hover over the waveform to see the reading.
+- Follow the system input or choose an available Core Audio microphone.
+- Drag the overlay to move it. It stays above other windows, joins every Space, and remembers its position.
+- When the selected microphone is muted, the waveform turns red and the menu bar icon changes.
+- Liquid Glass on macOS 26 and later; translucent material on earlier supported versions.
 
-The Settings speech-level legend uses the bundled Spline Sans Mono font for its dBFS ranges.
+## Menu bar controls
 
-The overlay contains only the waveform: it turns fully red when the selected microphone reports itself muted, and uses the normal level colors when the mic is on. The menu bar icon shows the microphone state. Hover over the waveform to reveal the live dBFS value.
+| Control | Action |
+| --- | --- |
+| Pause / Resume Meter | Stop or restart level monitoring |
+| Show Overlay | Bring the waveform overlay forward |
+| Settings | Choose a microphone and adjust overlay appearance and position |
+| Quit Micky | Close the app |
 
-## Build and launch
+Settings does not open automatically when Micky launches.
 
-On a Mac with Xcode Command Line Tools installed, run this standalone builder from the Micky folder:
+## Level guide
+
+| Peak level | Guide |
+| --- | --- |
+| Below −30 dBFS | Very quiet |
+| −30 to −18 dBFS | Low |
+| −18 to −6 dBFS | Useful call level |
+| −6 to −1 dBFS | Hot |
+| −1 dBFS or higher | Near clipping |
+
+dBFS measures digital headroom, not acoustic loudness. Call apps may adjust microphone gain, so use their own mic test too.
+
+## Settings
+
+- **Input:** System Default or an available microphone.
+- **Opacity:** 100% is opaque black; lower values blend the background with the desktop.
+- **Size and position:** Adjust the overlay scale and horizontal or vertical placement.
+- **Level guide:** See the colors and their corresponding dBFS ranges.
+
+## Permissions and data
+
+- **Microphone:** Required to read input levels. Micky analyzes audio samples in memory to calculate the current peak, then discards them. It does not record, save, or transmit audio.
+- **Other permissions:** None required.
+- **Saved locally:** Microphone selection and overlay settings (opacity, scale, and position) are stored in macOS preferences.
+
+Allow microphone access at the first prompt. To change it later, use **System Settings → Privacy & Security → Microphone**.
+
+## Use a prebuilt version
+
+Download the macOS app from [GitHub Releases](https://github.com/vardecab/micky/releases), unzip `Micky.app.zip`, and move `Micky.app` to Applications. Open it and allow microphone access when prompted. If macOS shows a security warning, Control-click the app, choose **Open**, then confirm.
+
+**No current prebuilt release is published yet.** Use the build scripts below until a release is available.
+
+## Build from source
+
+Requires macOS and Xcode Command Line Tools. From this folder, run:
 
 ```sh
 ./build-and-run.sh
 ```
 
-It builds the Swift package with Swift Package Manager, packages `build/Micky.app`, installs or updates `/Applications/Micky.app`, and launches the installed copy. macOS may ask for administrator approval to update `/Applications`.
+It builds Micky, installs or updates `/Applications/Micky.app`, then launches it in the background. It may request administrator approval to update Applications. Build output is shown in the terminal and saved to `build.log`.
 
-The first launch asks for microphone access. The app meters input locally and does not record or save audio. Use the menu bar microphone icon to pause/resume the meter or quit.
+## Version history
+
+App versions follow Semantic Versioning (`MAJOR.MINOR.PATCH`). The macOS build number increments separately.
+
+### 1.1.0
+
+- Keep Settings closed at launch; access app controls from the menu bar.
+- Add `icons/mic.png` as the app bundle icon.
+- Save build output to `build.log` and launch Micky in the background.
+
+### 1.0.0
+
+- Initial version with the menu bar meter, floating waveform, microphone selection, overlay settings, mute indication, and live dBFS readout.
+
+## License and attribution
+
+Micky's original code is licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE). Personal and other noncommercial use, including forks and changes, is allowed. Commercial use requires separate permission. This is a source-available license, not an OSI-approved open-source license. Keep the copyright notice and license with redistributed copies.
+
+Third-party assets have separate terms; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). If you make a fork or adapt Micky, I’d love to hear what you did in a [GitHub issue](https://github.com/vardecab/micky/issues), but that’s optional.

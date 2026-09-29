@@ -1,13 +1,32 @@
 #!/bin/bash
 set -euo pipefail
 
-# Standalone macOS build, app-bundle packaging, and launch script.
-# This uses Swift Package Manager directly and does not call build-app.sh or
-# rebuild-and-launch.sh.
-
 ROOT="$(cd "$(dirname "$0")" && pwd)"
-source "$ROOT/build-logging.sh"
-source "$ROOT/package-app-icon.sh"
+MICKY_BUILD_LOG="$ROOT/build.log"
+exec > >(tee "$MICKY_BUILD_LOG") 2>&1
+echo "Writing build output to $MICKY_BUILD_LOG"
+
+package_app_icon() {
+    local resources="$1"
+    local iconset="$ROOT/.build/Micky.iconset"
+    local size doubled
+
+    mkdir -p "$ROOT/.build" "$resources"
+    rm -rf "$iconset"
+    mkdir -p "$iconset"
+
+    for size in 16 32 128 256 512; do
+        doubled=$((size * 2))
+        sips -z "$size" "$size" "$ROOT/icons/mic.png" \
+            --out "$iconset/icon_${size}x${size}.png" >/dev/null
+        sips -z "$doubled" "$doubled" "$ROOT/icons/mic.png" \
+            --out "$iconset/icon_${size}x${size}@2x.png" >/dev/null
+    done
+
+    iconutil -c icns "$iconset" -o "$resources/Micky.icns"
+    rm -rf "$iconset"
+}
+
 BUILD_ROOT="$ROOT/.build/micky-direct"
 SWIFT_BUILD_ROOT="$BUILD_ROOT/SwiftPM"
 STAGED_APP="$BUILD_ROOT/Micky.app"
@@ -42,6 +61,8 @@ mkdir -p "$STAGED_APP/Contents/MacOS" \
 cp "$BIN_DIR/Micky" "$EXECUTABLE"
 
 cp "$ROOT/Info.plist" "$STAGED_APP/Contents/Info.plist"
+cp "$ROOT/LICENSE" "$ROOT/THIRD_PARTY_NOTICES.md" \
+   "$STAGED_APP/Contents/Resources/"
 cp "$ROOT/Fonts/SplineSansMono-Regular.ttf" \
    "$ROOT/Fonts/SplineSansMono-SemiBold.ttf" \
    "$ROOT/Fonts/OFL-SplineSansMono.txt" \
