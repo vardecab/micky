@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
+source "$ROOT/build-logging.sh"
 
 if pgrep -x Micky >/dev/null 2>&1 || pgrep -x MicMeter >/dev/null 2>&1; then
     osascript -e 'tell application id "com.vaultomix.Micky" to quit' >/dev/null 2>&1 || true
@@ -21,4 +22,4 @@ if pgrep -x Micky >/dev/null 2>&1 || pgrep -x MicMeter >/dev/null 2>&1; then
 fi
 
 "$ROOT/build-app.sh"
-open -n "$ROOT/build/Micky.app"
+open -g -n "$ROOT/build/Micky.app"

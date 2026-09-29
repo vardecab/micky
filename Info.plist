@@ -10,6 +10,8 @@
 	<string>Micky</string>
 	<key>CFBundleDisplayName</key>
 	<string>Micky</string>
+	<key>CFBundleIconFile</key>
+	<string>Micky.icns</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

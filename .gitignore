@@ -1,6 +1,7 @@
 # Swift build output
 .build/
 build/
+build.log
 
 # macOS filesystem metadata
 .DS_Store

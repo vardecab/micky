@@ -12,19 +12,33 @@ struct MickyApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some Scene {
-        Settings {
-            MicMeterSettingsView()
+        MenuBarExtra {
+            Button("Pause / Resume Meter") {
+                appDelegate.toggleMeter()
+            }
+            Button("Show Overlay") {
+                appDelegate.showOverlay()
+            }
+            Button("Settings…") {
+                appDelegate.showSettings()
+            }
+            Divider()
+            Button("Quit Micky") {
+                NSApp.terminate(nil)
+            }
+        } label: {
+            StatusItemLabel(appDelegate: appDelegate)
         }
+        .menuBarExtraStyle(.menu)
     }
 }
 
 @MainActor
-final class AppDelegate: NSObject, NSApplicationDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     private let meter = MicrophoneMeter()
     private var panel: NSPanel!
-    private var statusItem: NSStatusItem!
-    private var meterItem: NSMenuItem!
     private var fallbackSettingsWindow: NSWindow?
+    @Published private(set) var isMuted = true
     private var muteStateObservation: AnyCancellable?
     private var panelMoveObserver: NSObjectProtocol?
     private var verticalPositionObserver: NSObjectProtocol?
@@ -34,10 +48,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
         makePanel()
-        makeStatusItem()
         muteStateObservation = meter.$isMuted.sink { [weak self] isMuted in
             Task { @MainActor in
-                self?.updateStatusItemIcon(isMuted: isMuted)
+                self?.isMuted = isMuted
             }
         }
         meter.start()
@@ -146,32 +159,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         UserDefaults.standard.set(min(1, max(0, vertical)), forKey: "overlayVerticalPosition")
     }
 
-    private func makeStatusItem() {
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        statusItem.button?.toolTip = "Micky"
-        statusItem.isVisible = true
-        updateStatusItemIcon(isMuted: meter.isMuted)
-
-        let menu = NSMenu()
-        meterItem = NSMenuItem(title: "Pause / Resume Meter", action: #selector(toggleMeter), keyEquivalent: "")
-        meterItem.target = self
-        menu.addItem(meterItem)
-
-        let showItem = NSMenuItem(title: "Show Overlay", action: #selector(showOverlay), keyEquivalent: "")
-        showItem.target = self
-        menu.addItem(showItem)
-
-        let settingsItem = NSMenuItem(title: "Settings…", action: #selector(showSettings), keyEquivalent: ",")
-        settingsItem.target = self
-        menu.addItem(settingsItem)
-        menu.addItem(.separator())
-        let quitItem = NSMenuItem(title: "Quit Micky", action: #selector(quit), keyEquivalent: "q")
-        quitItem.target = self
-        menu.addItem(quitItem)
-        statusItem.menu = menu
-    }
-
-    @objc private func toggleMeter() {
+    func toggleMeter() {
         if meter.isEnabled {
             meter.stop()
         } else {
@@ -179,27 +167,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    private func updateStatusItemIcon(isMuted: Bool) {
-        let image = MicMeterIcons.image(isMuted: isMuted)
-        image.size = NSSize(width: 18, height: 18)
-        statusItem.button?.image = image
-        statusItem.button?.image?.isTemplate = false
-        statusItem.button?.toolTip = isMuted ? "Micky — Microphone muted" : "Micky — Microphone on"
-    }
-
-    @objc private func showOverlay() {
+    func showOverlay() {
         panel.orderFrontRegardless()
     }
 
-    @objc private func showSettings() {
+    func showSettings() {
         NSApp.activate(ignoringOtherApps: true)
-        let openedSettingsScene = NSApp.sendAction(
-            Selector(("showSettingsWindow:")),
-            to: nil,
-            from: nil
-        )
-        guard !openedSettingsScene else { return }
-
         if fallbackSettingsWindow == nil {
             let window = NSWindow(
                 contentRect: NSRect(x: 0, y: 0, width: 430, height: 535),
@@ -216,8 +189,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         fallbackSettingsWindow?.makeKeyAndOrderFront(nil)
     }
 
-    @objc private func quit() {
-        NSApp.terminate(nil)
+}
+
+private struct StatusItemLabel: View {
+    @ObservedObject var appDelegate: AppDelegate
+
+    var body: some View {
+        let image = MicMeterIcons.image(isMuted: appDelegate.isMuted)
+        image.size = NSSize(width: 18, height: 18)
+        image.isTemplate = false
+        return Image(nsImage: image)
+            .help(appDelegate.isMuted ? "Micky — Microphone muted" : "Micky — Microphone on")
     }
 }
 

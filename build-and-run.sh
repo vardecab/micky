@@ -6,6 +6,8 @@ set -euo pipefail
 # rebuild-and-launch.sh.
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
+source "$ROOT/build-logging.sh"
+source "$ROOT/package-app-icon.sh"
 BUILD_ROOT="$ROOT/.build/micky-direct"
 SWIFT_BUILD_ROOT="$BUILD_ROOT/SwiftPM"
 STAGED_APP="$BUILD_ROOT/Micky.app"
@@ -46,6 +48,7 @@ cp "$ROOT/Fonts/SplineSansMono-Regular.ttf" \
    "$STAGED_APP/Contents/Resources/Fonts/"
 cp "$ROOT/icons/mic-on.png" "$ROOT/icons/mic-off.png" \
    "$STAGED_APP/Contents/Resources/icons/"
+package_app_icon "$STAGED_APP/Contents/Resources"
 
 codesign --force --deep --sign - "$STAGED_APP"
 
@@ -77,5 +80,5 @@ else
     end run' "$APP"
 fi
 
-open -n "$INSTALL_APP"
+open -g -n "$INSTALL_APP"
 echo "Built $APP, installed $INSTALL_APP, and launched it."
