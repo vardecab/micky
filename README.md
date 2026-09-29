@@ -1,6 +1,13 @@
 # Micky
 
+![Version 1.1.0](https://img.shields.io/badge/version-1.1.0-blue)
+![macOS 13+](https://img.shields.io/badge/macOS-13%2B-black?logo=apple)
+![Swift 5.9+](https://img.shields.io/badge/Swift-5.9%2B-F05138?logo=swift&logoColor=white)
+[![PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-6f42c1)](LICENSE)
+
 A macOS menu bar microphone meter with a floating, always-on-top waveform overlay. Audio is measured locally and never recorded or saved.
+
+![Micky's floating microphone level overlay](screenshots/micky.gif)
 
 ## Features
 
@@ -28,7 +35,7 @@ Settings does not open automatically when Micky launches.
 | Below −30 dBFS | Very quiet |
 | −30 to −18 dBFS | Low |
 | −18 to −6 dBFS | Useful call level |
-| −6 to −1 dBFS | Hot |
+| −6 to −1 dBFS | Loud |
 | −1 dBFS or higher | Near clipping |
 
 dBFS measures digital headroom, not acoustic loudness. Call apps may adjust microphone gain, so use their own mic test too.
