@@ -48,6 +48,14 @@ dBFS measures digital headroom, not acoustic loudness. Call apps may adjust micr
 | :---: | :---: | :---: |
 | <img src="screenshots/good.png" alt="Waveform at a good call level" width="240"> | <img src="screenshots/loud.png" alt="Waveform at a loud level" width="240"> | <img src="screenshots/muted.png" alt="Muted waveform shown in red" width="240"> |
 
+#### Overlay opacity
+
+| Opaque | Semi-transparent | Transparent |
+| :---: | :---: | :---: |
+| <img src="screenshots/opaque.png" alt="Micky overlay at full opacity" width="240"> | <img src="screenshots/semi.png" alt="Micky overlay at medium opacity" width="240"> | <img src="screenshots/transparent.png" alt="Micky overlay at low opacity" width="240"> |
+
+Wallpaper in these examples: **Summit** by [Basic Apple Guy](https://basicappleguy.com/basicappleblog/summit).
+
 ### ⚙️ Settings
 
 - **Input:** System Default or an available microphone.
