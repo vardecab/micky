@@ -1,0 +1,12 @@
+# Swift build output
+.build/
+build/
+
+# macOS filesystem metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode user state
+xcuserdata/
+*.xcuserstate
